@@ -11,8 +11,9 @@ tiles.addTo(map);
 //set icon
 const vesselsIcon = L.icon({
     iconUrl: 'SVG_boat.svg',
-    iconSize: [5, 5],
-    iconAnchor: [3,3],
+    iconSize: [30, 30],
+    iconAnchor: [15,15],
+    popupAnchor:[0,-5]
 });
 //L.marker([39.07,21.82],{icon:vesselsIcon}).addTo(map)
 setWebSocket();
@@ -33,14 +34,7 @@ function addNewVessel(data){
         id:data.id,
         name:data.name,
         cords:[],
-        vesselOnMap: L.circle([point.x,point.y],
-            {
-                color:'#3388ff',
-                weight:3,
-                opacity:1,
-                radius:1000
-            } 
-        ).addTo(map)
+        vesselOnMap: L.marker([point.x,point.y],{icon:vesselsIcon}).bindPopup(`<p>${data.name}</p>`).addTo(map)
     };
     vessels.push(vessel);
     vessel.cords.push(point);
@@ -56,19 +50,15 @@ function redrawVessel(data){
     L.polyline(latlon,
         {
             color:'#3388ff',
-            weight:3,
+            weight:2,
             opacity:1,
             radius:1000
         }
         ).addTo(map);
-    knownVessel.vesselOnMap=L.circle([knownVessel.cords[knownVessel.cords.length-1].x,knownVessel.cords[knownVessel.cords.length-1].y],
-            {
-                color:'#3388ff',
-                weight:1,
-                opacity:1,
-                radius:1000
-            } 
-        ).addTo(map)
+    knownVessel.vesselOnMap=L.marker([knownVessel.cords[knownVessel.cords.length-1].x,knownVessel.cords[knownVessel.cords.length-1].y],
+            {icon:vesselsIcon} 
+        ).bindPopup(`<p>${knownVessel.name}</p>`).addTo(map)
+
     }
 
 function createLatLong(data){
