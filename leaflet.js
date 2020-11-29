@@ -1,7 +1,6 @@
 //create map ,see whole 
 const Greece=new L.LatLng(39.07,21.82)
 const map=L.map('map').setView(Greece,6);
-const vessels=[];
 //set tiles
 const tileUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 const attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -15,8 +14,11 @@ const vesselsIcon = L.icon({
     iconAnchor: [15,15],
     popupAnchor:[0,-5]
 });
-//L.marker([39.07,21.82],{icon:vesselsIcon}).addTo(map)
+//create object to store all vessels
+const vessels=[];
+//init websocket connection
 setWebSocket();
+//decide whether to store new vessel or redraw one
 function processData(data){
     let vessel=vessels.find(v=>v.id==data.id);
     if(!vessel){
@@ -42,8 +44,6 @@ function addNewVessel(data){
 function redrawVessel(data){
     let knownVessel=vessels.find(v=>v.id==data.id);
     let point=L.point([data.lat,data.lon]);
-    //let didMove= didVesselMove(knownVessel,point);
-    //if(didMove){
     knownVessel.cords.push(point);
     map.removeLayer(knownVessel.vesselOnMap);
     let latlon = createLatLong(knownVessel.cords)
@@ -59,8 +59,9 @@ function redrawVessel(data){
             {icon:vesselsIcon} 
         ).bindPopup(`<p>${knownVessel.name}</p>`).addTo(map)
 
-    }
+}
 
+//create array for L.polyline LatLon argument 
 function createLatLong(data){
     let array=[];
     for(let i=0;i<data.length;i++){
@@ -68,8 +69,9 @@ function createLatLong(data){
     }
     return array;
 }
+
 function updateTimestamp(data){
-    // Create a new JavaScript Date object based on the timestamp
-    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    // Create date based object from data.timestamp
+    // multiplied by 1000 so that the arg is in milliseconds, not seconds.
     document.getElementById("time").innerHTML=`${(new Date(data.timestamp*1000)).toUTCString()}`
 }
