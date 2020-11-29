@@ -5,16 +5,37 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <title>Websockets example client</title>
     <style>
-        #map{
-            height: 700px;
-            margin: 0;
+        body {
             padding: 0;
+            margin: 0;
         }
+        html, body, #map{
+            height: 100%;
+            width: 100%;
+            
+        }
+        #map{
+            position: relative;
+        }
+        #time{
+            z-index: 1000;
+            position: absolute;
+            bottom: 0px;
+            float: left;
+            margin: 0px 0px 10px 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+       
     </style>
 </head>
 <body>
-    <div id="map"></div>
-
+    <div id="map">
+        <div id="time">
+        </div>
+    </div>
+    
    
 </body>
 

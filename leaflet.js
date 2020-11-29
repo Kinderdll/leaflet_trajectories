@@ -1,6 +1,6 @@
 //create map ,see whole 
 const Greece=new L.LatLng(39.07,21.82)
-const map=L.map('map').setView(Greece,5);
+const map=L.map('map').setView(Greece,6);
 const vessels=[];
 //set tiles
 const tileUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -24,7 +24,7 @@ function processData(data){
     else{
         redrawVessel(data);
     }
-       
+    updateTimestamp(data);  
 }
 
 function addNewVessel(data){
@@ -36,7 +36,7 @@ function addNewVessel(data){
         vesselOnMap: L.circle([point.x,point.y],
             {
                 color:'#3388ff',
-                weight:1,
+                weight:3,
                 opacity:1,
                 radius:1000
             } 
@@ -56,8 +56,9 @@ function redrawVessel(data){
     L.polyline(latlon,
         {
             color:'#3388ff',
-            weight:1,
-            opacity:1
+            weight:3,
+            opacity:1,
+            radius:1000
         }
         ).addTo(map);
     knownVessel.vesselOnMap=L.circle([knownVessel.cords[knownVessel.cords.length-1].x,knownVessel.cords[knownVessel.cords.length-1].y],
@@ -76,4 +77,9 @@ function createLatLong(data){
         array.push(Object.values(data[i]))
     }
     return array;
+}
+function updateTimestamp(data){
+    // Create a new JavaScript Date object based on the timestamp
+    // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+    document.getElementById("time").innerHTML=`${(new Date(data.timestamp*1000)).toUTCString()}`
 }
